@@ -1,7 +1,7 @@
-# Make & Grow — https://makeandgrow.studio/
+# Make & Grow — https://make-and-grow-studio.designwithramki.workers.dev/
 # Everything is public; there is nothing here worth hiding from a crawler.
 
 User-agent: *
 Allow: /
 
-Sitemap: https://makeandgrow.studio/sitemap.xml
+Sitemap: https://make-and-grow-studio.designwithramki.workers.dev/sitemap.xml
