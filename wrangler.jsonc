@@ -1,0 +1,18 @@
+{
+  // Cloudflare Workers config. Without this file the "npx wrangler deploy"
+  // step in Cloudflare's build settings has nothing to act on and fails
+  // after an otherwise successful build.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "make-and-grow-studio",
+  "compatibility_date": "2026-08-13",
+
+  // No "main" script: this is a static site, so the Worker serves the built
+  // files directly and never runs any server code.
+  "assets": {
+    "directory": "./dist",
+    // Any unmatched path returns index.html rather than a 404, so the React
+    // app boots and handles it. The site is one page today, but this is what
+    // stops deep links breaking the moment a second route exists.
+    "not_found_handling": "single-page-application"
+  }
+}
