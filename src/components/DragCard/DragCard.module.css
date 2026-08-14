@@ -1,0 +1,138 @@
+.wrap {
+  position: relative;
+  display: inline-block;
+  touch-action: none;
+}
+
+/* Owns the idle float so it never fights Draggable's x/y on the card. */
+.floater {
+  display: block;
+  will-change: transform;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  width: clamp(148px, 40vw, 186px);
+  padding: 0.95rem 1rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  /* Deliberately the one dark object on the canvas — it's the thing
+     you're told not to touch, so it should look like a foreign body. */
+  background: linear-gradient(150deg, #1c2b36, var(--ink));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 18px 40px -22px rgba(16, 30, 40, 0.7);
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card[data-dragging='true'] {
+  border-color: var(--brand);
+  cursor: grabbing;
+}
+
+/* Little window-chrome dots — it reads as a card you can pick up. */
+.chrome {
+  display: flex;
+  gap: 5px;
+}
+.chrome span {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.chrome span:first-child {
+  background: var(--brand);
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: #f4f8fb;
+}
+
+.hint {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(244, 248, 251, 0.55);
+}
+
+.grip {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.7rem;
+  display: grid;
+  grid-template-columns: repeat(2, 3px);
+  gap: 3px;
+  opacity: 0.5;
+}
+.grip i {
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--brand);
+}
+
+/* Where the card will snap back to — visible only while dragging, so the
+   spring-back reads as a rule being enforced rather than a glitch. */
+.home {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  border: 1.5px dashed var(--anno-line);
+  background: var(--anno-soft);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Toast ──────────────────────────────────────────────── */
+/* Above the card, not below: below it competes with the buttons and gets
+   lost against the busiest part of the hero. */
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.85rem);
+  /* `translate`, not `transform` — GSAP owns transform on this element, so
+     centring has to live on a property it won't overwrite. */
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.6em 1em;
+  border-radius: 3px;
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 12px 28px -14px rgba(196, 64, 14, 0.9);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform-origin: 50% 120%;
+}
+
+/* Little tail so it reads as speech from the card. */
+.toast::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: var(--brand);
+}

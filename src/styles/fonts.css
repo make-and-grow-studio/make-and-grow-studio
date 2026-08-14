@@ -1,0 +1,44 @@
+/* ── Self-hosted type ────────────────────────────────────────
+   Archivo — display. An industrial grotesque with a full 100–900 weight
+   axis, which the Design service canvas animates directly, so this one has
+   to stay variable.
+   Instrument Sans — body. Utilitarian and quiet under the display face.
+   JetBrains Mono — labels, readouts, dimensions, filenames. A drawing's
+   annotation is always monospaced; this one is drawn for technical text
+   rather than adapted to it.
+   Caveat — the marker hand, for redline notes. Used sparingly.
+
+   All four are self-hosted (latin subset) rather than linked, because the
+   published page runs under a CSP that blocks external hosts. */
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo-var.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Instrument Sans';
+  src: url('/fonts/instrument-sans-var.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-var.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Caveat';
+  src: url('/fonts/caveat-var.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}

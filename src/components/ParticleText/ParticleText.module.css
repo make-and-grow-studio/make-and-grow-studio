@@ -1,0 +1,46 @@
+.wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  /* The particle field needs an explicit box — it has no text to size it.
+     --pt-size is read by the sampler to rasterise the type at the right
+     scale, so the two must stay in step. */
+  --pt-size: clamp(46px, 15vw, 96px);
+  /* Four short lines on a phone. The multiplier runs ahead of the line
+     count on purpose: the block is centred in the box, and ascenders
+     overshoot the first line box enough to clip without the slack. */
+  height: calc(var(--pt-size) * 0.88 * 4.5);
+}
+
+/* Short handsets: trim the slack rather than the type. 4.05 still leaves
+   room for ascenders to overshoot the first line box without clipping. */
+@media (max-height: 760px) {
+  .wrap {
+    height: calc(var(--pt-size) * 0.88 * 4.05);
+  }
+}
+
+@media (min-width: 900px) {
+  .wrap {
+    --pt-size: clamp(80px, 10vw, 168px);
+    height: calc(var(--pt-size) * 0.88 * 3.4);
+  }
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

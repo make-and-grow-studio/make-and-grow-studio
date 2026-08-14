@@ -1,0 +1,449 @@
+.root {
+  position: relative;
+  padding: var(--section-y) var(--gutter);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding-bottom: clamp(1.6rem, 4vw, 2.6rem);
+  color: var(--ink-soft);
+}
+.headTag {
+  color: var(--brand);
+}
+
+.title {
+  font-size: var(--fs-section);
+  font-weight: 600;
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  max-width: 16ch;
+  text-wrap: initial;
+}
+
+.sub {
+  max-width: 42ch;
+  margin-top: clamp(1rem, 2vw, 1.4rem);
+  color: var(--ink-soft);
+  font-size: clamp(0.98rem, 0.94rem + 0.3vw, 1.15rem);
+}
+
+.body {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  padding-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+/* Grid items default to min-width:auto, so the nowrap channel title in the
+   panel head would push the whole panel wider than a phone screen. */
+.body > * {
+  min-width: 0;
+}
+
+@media (min-width: 1000px) {
+  .body {
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: start;
+  }
+}
+
+/* ── Step rail ──────────────────────────────────────────── */
+.steps {
+  display: flex;
+  gap: 0;
+  flex-direction: column;
+}
+
+@media (min-width: 1000px) {
+  .steps {
+    position: sticky;
+    top: calc(var(--chrome-h) + 3rem);
+  }
+}
+
+.step {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding: clamp(0.7rem, 1.4vw, 1rem) 0;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  transition:
+    color 0.5s var(--ease-out-expo),
+    padding-left 0.6s var(--ease-out-expo);
+}
+.step:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.step[data-state='active'],
+.step[data-state='done'] {
+  color: var(--ink);
+}
+.step[data-state='active'] {
+  padding-left: 0.7rem;
+}
+.step[data-state='active'] .stepN {
+  color: var(--brand);
+}
+
+.stepN {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.5s var(--ease-out-expo);
+}
+
+/* The row carries .label for its mono numerals; the display name has to
+   opt back out of the uppercase and tracking that comes with it. */
+.stepLabel {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-transform: none;
+}
+
+/* Fills left-to-right as the step completes. */
+.stepBar {
+  margin-left: auto;
+  align-self: center;
+  position: relative;
+  width: clamp(38px, 7vw, 64px);
+  height: 2px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+  flex: none;
+}
+.stepBar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.7s var(--ease-out-expo);
+}
+.step[data-state='active'] .stepBar::after,
+.step[data-state='done'] .stepBar::after {
+  transform: scaleX(1);
+}
+
+/* ── Panel ──────────────────────────────────────────────── */
+.panel {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--frame);
+  box-shadow: var(--sh);
+  overflow: hidden;
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--soft);
+}
+
+.chrome {
+  display: flex;
+  gap: 5px;
+  flex: none;
+}
+.chrome i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(var(--ink-rgb), 0.2);
+}
+.chrome i:first-child {
+  background: var(--brand);
+}
+
+.channel {
+  color: var(--ink);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.channelMuted {
+  color: var(--ink-soft);
+}
+
+.live {
+  margin-left: auto;
+  display: none;
+  align-items: center;
+  gap: 0.5em;
+  color: var(--ink-soft);
+  flex: none;
+}
+@media (min-width: 560px) {
+  .live {
+    display: inline-flex;
+  }
+}
+.liveDot {
+  position: relative;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: currentColor;
+  color: var(--brand);
+}
+
+/* ── Thread ─────────────────────────────────────────────── */
+.thread {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* new messages push older ones off the top */
+  gap: 0.55rem;
+  height: clamp(340px, 52vh, 460px);
+  padding: 1.1rem 1rem;
+  overflow: hidden;
+  /* Older messages dissolve rather than getting guillotined by the edge. */
+  mask-image: linear-gradient(to bottom, transparent, #000 12%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%);
+  background: var(--frame);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0 0.2rem;
+  color: var(--brand);
+  flex: none;
+}
+.dividerRule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* A work thread, not a text message: both speakers run down the same left
+   edge with an avatar, name and timestamp. Opposing bubbles would read as
+   a customer-support chat, which is the opposite of the point. */
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  flex: none;
+  padding-block: 0.15rem;
+}
+
+.avatar {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #fff;
+  user-select: none;
+}
+.row[data-from='you'] .avatar {
+  background: var(--anno);
+}
+.row[data-from='mg'] .avatar {
+  background: var(--brand);
+}
+
+.bubble {
+  position: relative;
+  min-width: 0;
+  max-width: 42ch;
+  font-size: clamp(0.9rem, 0.87rem + 0.2vw, 1rem);
+  line-height: 1.45;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.who {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+}
+.whoName {
+  color: var(--ink);
+  font-weight: 700;
+}
+.whoAt {
+  color: var(--ink-soft);
+  font-size: 0.9em;
+}
+
+/* ── Reaction pill ──────────────────────────────────────── */
+/* flex, not inline-flex: it has to break onto its own line under the
+   message rather than trailing the last word. */
+.react {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.3em;
+  margin-top: 0.4rem;
+  padding: 0.16em 0.5em;
+  border-radius: 3px;
+  border: 1px solid var(--anno-line);
+  background: var(--anno-soft);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+/* ── Attachment chip ────────────────────────────────────── */
+.attach {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 9px;
+  border: 1px solid currentColor;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+}
+.attach {
+  border-color: var(--line-2);
+  background: var(--soft);
+  color: var(--ink);
+  width: fit-content;
+}
+
+.attachIcon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: var(--brand);
+  opacity: 0.75;
+}
+
+.attachName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Typing indicator ───────────────────────────────────── */
+.typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.5rem 0.7rem;
+  border-radius: 3px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+}
+
+.typingDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--ink-soft);
+}
+.row[data-from='you'] .typingDot {
+  background: var(--anno);
+}
+.row[data-from='mg'] .typingDot {
+  background: var(--brand);
+}
+
+/* ── Composer (decorative) ──────────────────────────────── */
+.composer {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.8rem 1rem;
+  border-top: 1px solid var(--line);
+  background: var(--soft);
+  color: var(--ink-soft);
+}
+
+.composerField {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.caret {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  vertical-align: -0.15em;
+  background: var(--brand);
+  animation: blink 1.1s steps(1) infinite;
+}
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.send {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+  background: var(--brand);
+  color: var(--ink);
+  font-size: 0.8rem;
+}
+
+/* ── Replay ─────────────────────────────────────────────── */
+.replay {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 1rem;
+  padding: 0.6em 1em;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--ink-soft);
+  transition:
+    color 0.4s var(--ease-out-expo),
+    border-color 0.4s var(--ease-out-expo),
+    opacity 0.4s linear;
+}
+.replay:hover {
+  color: var(--ink);
+  border-color: var(--brand);
+}
+.replay[data-done='false'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+}

@@ -1,0 +1,131 @@
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  /* Parked off-screen until the first pointermove writes a real position. */
+  transform: translate3d(-200px, -200px, 0);
+  transition: opacity 0.25s linear;
+}
+
+/* ── The cross ────────────────────────────────────────────
+   Centred on the hot spot rather than hanging below-right of it: this is
+   an instrument sighting a point, so the point has to be inside it. */
+.cross {
+  display: block;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  overflow: visible;
+}
+
+.hair {
+  stroke: var(--anno);
+  stroke-width: 1;
+  transition:
+    stroke 0.25s var(--ease-out-expo),
+    opacity 0.25s var(--ease-out-expo);
+}
+
+.ring {
+  stroke: var(--anno);
+  stroke-width: 1;
+  fill: none;
+  transform-origin: center;
+  transition:
+    stroke 0.25s var(--ease-out-expo),
+    transform 0.4s var(--ease-spring);
+}
+
+.pip {
+  fill: var(--anno);
+  transition: fill 0.25s var(--ease-out-expo);
+}
+
+/* ── The readout ──────────────────────────────────────────
+   Hung down-right of the cross, clear of the hairlines. */
+.tag {
+  position: absolute;
+  top: 13px;
+  left: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.26em 0.5em;
+  font-family: var(--mono);
+  font-size: 9px;
+  line-height: 1.3;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+  color: var(--frame);
+  background: var(--anno);
+  border-radius: 2px;
+  transition:
+    background-color 0.28s var(--ease-out-expo),
+    transform 0.34s var(--ease-spring);
+}
+
+.readout {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+/* Empty until an element supplies one, and drawn off its own rule so it
+   reads as appended to the measurement rather than replacing it. */
+.label {
+  display: none;
+  text-transform: uppercase;
+}
+.cursor[data-has-label='true'] .label {
+  display: inline;
+  padding-left: 0.55em;
+  border-left: 1px solid rgba(243, 240, 233, 0.4);
+}
+
+/* ── States ───────────────────────────────────────────────
+   Over something interactive the cross locks on: the ring opens out and
+   the whole instrument goes to the live colour. */
+.cursor[data-state='hover'] .ring,
+.cursor[data-state='drag'] .ring,
+.cursor[data-state='measure'] .ring {
+  transform: scale(1.55);
+}
+
+.cursor[data-state='hover'] .hair,
+.cursor[data-state='hover'] .ring,
+.cursor[data-state='drag'] .hair,
+.cursor[data-state='drag'] .ring {
+  stroke: var(--brand);
+}
+.cursor[data-state='hover'] .pip,
+.cursor[data-state='drag'] .pip {
+  fill: var(--brand);
+}
+.cursor[data-state='hover'] .tag,
+.cursor[data-state='drag'] .tag {
+  background: var(--brand);
+}
+
+/* Measuring keeps the graphite — a dimension isn't a live control. */
+.cursor[data-state='measure'] .hair {
+  opacity: 0.5;
+}
+
+/* Pressing sights down: the ring closes onto the pip. */
+.cursor[data-pressed='true'] .ring {
+  transform: scale(0.62);
+}
+
+.cursor[data-visible='false'] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tag,
+  .ring,
+  .hair,
+  .pip {
+    transition: none;
+  }
+}

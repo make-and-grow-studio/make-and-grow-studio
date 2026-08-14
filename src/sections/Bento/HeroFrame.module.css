@@ -1,0 +1,361 @@
+/* A miniature plate, setting itself out on a loop. All CSS — it runs
+   forever at compositor cost, and there is no state worth putting in JS. */
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: clamp(150px, 22vw, 210px);
+  margin-top: clamp(0.9rem, 2vw, 1.2rem);
+  border-radius: 3px;
+  /* Gridded stock, at the same two scales as the board behind the page. */
+  background:
+    linear-gradient(rgba(243, 240, 233, 0.04), rgba(243, 240, 233, 0.04)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(243, 240, 233, 0.09) 0 1px,
+      transparent 1px 22px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(243, 240, 233, 0.09) 0 1px,
+      transparent 1px 22px
+    );
+  overflow: hidden;
+}
+
+/* ── The plate being worked on ──────────────────────────── */
+.plate {
+  position: absolute;
+  left: 12%;
+  top: 24%;
+  width: 60%;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid rgba(243, 240, 233, 0.18);
+  background: rgba(243, 240, 233, 0.05);
+  animation: hf-breathe 9s ease-in-out infinite;
+}
+
+@keyframes hf-breathe {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+/* ── Registration marks ─────────────────────────────────────
+   Open L-corners outside the plate, struck in on a diagonal rotation.
+   They mark extent; they don't offer to drag it. */
+.regs {
+  position: absolute;
+  inset: -5px;
+  pointer-events: none;
+}
+
+.reg {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border: 0 solid var(--brand);
+  animation: hf-reg 6s ease-in-out infinite;
+}
+.r1 {
+  top: 0;
+  left: 0;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  animation-delay: 0s;
+}
+.r2 {
+  top: 0;
+  right: 0;
+  border-top-width: 1px;
+  border-right-width: 1px;
+  animation-delay: -4.5s;
+}
+.r3 {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+  animation-delay: -3s;
+}
+.r4 {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  animation-delay: -1.5s;
+}
+
+@keyframes hf-reg {
+  0%,
+  70%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  8% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+}
+
+/* ── The dimension across the top ───────────────────────── */
+.dim {
+  position: absolute;
+  left: 12%;
+  top: 13%;
+  width: 60%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(243, 240, 233, 0.6);
+}
+.dimExt {
+  width: 1px;
+  height: 9px;
+  background: rgba(243, 240, 233, 0.3);
+  flex: none;
+}
+.dimRule {
+  flex: 1;
+  height: 1px;
+  background: rgba(243, 240, 233, 0.3);
+}
+.dimFig {
+  flex: none;
+  font-family: var(--mono);
+  font-size: 0.44rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.46rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(243, 240, 233, 0.5);
+}
+
+.title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: #f3f0e9;
+  margin-top: 0.25rem;
+}
+/* The word the studio keeps re-inking. */
+.titleAccent {
+  animation: hf-reink 6s steps(1) infinite;
+}
+@keyframes hf-reink {
+  0%,
+  33% {
+    color: var(--brand);
+  }
+  34%,
+  66% {
+    color: var(--grow-lift);
+  }
+  67%,
+  100% {
+    color: #f3f0e9;
+  }
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: 0.7rem;
+  padding: 0.4em 0.75em;
+  border-radius: 2px;
+  background: var(--brand);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* Squashes when the scriber reaches it. */
+  animation: hf-press 6s ease-in-out infinite;
+}
+@keyframes hf-press {
+  0%,
+  44%,
+  56%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+}
+
+/* ── Ink being tried ────────────────────────────────────── */
+.chips {
+  position: absolute;
+  left: 12%;
+  bottom: 12%;
+  display: flex;
+  gap: 5px;
+}
+.chip {
+  width: 9px;
+  height: 9px;
+  background: rgba(243, 240, 233, 0.24);
+  animation: hf-chip 6s ease-in-out infinite;
+}
+.chip:nth-child(1) {
+  animation-delay: 0s;
+}
+.chip:nth-child(2) {
+  animation-delay: -2s;
+}
+.chip:nth-child(3) {
+  animation-delay: -4s;
+}
+@keyframes hf-chip {
+  0%,
+  22%,
+  100% {
+    background: rgba(243, 240, 233, 0.24);
+    transform: scale(1);
+  }
+  8% {
+    background: var(--brand);
+    transform: scale(1.3);
+  }
+}
+
+/* ── The scriber ────────────────────────────────────────── */
+.scriber {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15px;
+  height: 15px;
+  animation: hf-scriber 6s ease-in-out infinite;
+}
+.scriber svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+@keyframes hf-scriber {
+  0% {
+    transform: translate3d(78%, 22%, 0);
+  }
+  25% {
+    transform: translate3d(30%, 40%, 0);
+  }
+  /* Arrives at the button as it presses. */
+  48%,
+  56% {
+    transform: translate3d(22%, 62%, 0);
+  }
+  78% {
+    transform: translate3d(70%, 74%, 0);
+  }
+  100% {
+    transform: translate3d(78%, 22%, 0);
+  }
+}
+
+.scriberTag {
+  position: absolute;
+  top: 13px;
+  left: 11px;
+  padding: 0.15em 0.35em;
+  border-radius: 2px;
+  background: var(--brand);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 0.42rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── The datum ──────────────────────────────────────────────
+   Dash-dot, the way a reference line is always drawn. 11s against the
+   scriber's 6s, so the two never settle into a visible rhythm. */
+.datum {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  /* Full-width element carrying a 1px line at its left edge, so the sweep
+     is translateX(100%) against its own box — no container query needed to
+     learn how wide the stage is. */
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    0deg,
+    var(--brand) 0 7px,
+    transparent 7px 10px,
+    var(--brand) 10px 12px,
+    transparent 12px 15px
+  );
+  background-size: 1px 100%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  opacity: 0.4;
+  animation: hf-datum 11s ease-in-out infinite;
+}
+@keyframes hf-datum {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  12%,
+  88% {
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateX(calc(100% - 1px));
+  }
+}
+
+/* ── Corner readout ─────────────────────────────────────── */
+.live {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--mono);
+  font-size: 0.44rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(243, 240, 233, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plate,
+  .reg,
+  .titleAccent,
+  .cta,
+  .chip,
+  .scriber,
+  .datum {
+    animation: none;
+  }
+  .scriber {
+    transform: translate3d(30%, 55%, 0);
+  }
+  .titleAccent {
+    color: var(--brand);
+  }
+  .datum {
+    opacity: 0.3;
+    transform: translateX(60%);
+  }
+}

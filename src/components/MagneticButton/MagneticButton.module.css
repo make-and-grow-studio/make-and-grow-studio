@@ -1,0 +1,91 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 46px;
+  padding: 0.85em 1.5em;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink);
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.45s var(--ease-out-expo), border-color 0.45s var(--ease-out-expo);
+}
+
+/* The brass wipe that climbs from the bottom on hover. */
+.root::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--brand);
+  transform: translateY(101%);
+  transition: transform 0.55s var(--ease-out-expo);
+}
+
+.root:hover,
+.root:focus-visible {
+  color: #fff;
+  border-color: var(--brand);
+}
+.root:hover::before,
+.root:focus-visible::before {
+  transform: translateY(0);
+}
+
+.root:active {
+  transform: scale(0.97);
+}
+
+.label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  white-space: nowrap;
+}
+
+/* ── Variants ───────────────────────────────────────────── */
+.solid {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.solid::before {
+  background: var(--brand-deep);
+}
+.solid:hover,
+.solid:focus-visible {
+  color: #fff;
+}
+
+.ghost {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  padding-inline: 0.35em;
+}
+.ghost::before {
+  display: none;
+}
+
+/* Large — the CTA button */
+.lg {
+  min-height: 64px;
+  padding: 1.15em 2.4em;
+  font-size: clamp(0.7rem, 0.66rem + 0.2vw, 0.82rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root,
+  .root::before {
+    transition-duration: 0.01ms;
+  }
+}

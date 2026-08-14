@@ -1,0 +1,179 @@
+@import './styles/fonts.css';
+@import './styles/tokens.css';
+@import './styles/ambient.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: auto; /* Lenis owns scrolling */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: var(--fs-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  /* Lenis needs the page to scroll normally; we only hide the native bar. */
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--display);
+    font-weight: 700;
+    line-height: 0.94;
+    letter-spacing: -0.03em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  ::selection {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  /* Mono editorial label — used everywhere for detailing */
+  .label {
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    font-weight: 400;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .mono {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .gutter {
+    padding-inline: var(--gutter);
+  }
+
+  .accent {
+    color: var(--brand);
+  }
+
+  /* Handwritten aside — used once per section at most, as a human note
+     pinned to the canvas. Any more and it stops being an aside. */
+  .hand {
+    font-family: var(--hand);
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--brand);
+  }
+
+  /* A white object floating on the canvas. */
+  .frame {
+    background: var(--frame);
+    border-radius: var(--radius);
+    box-shadow: var(--sh);
+  }
+}
+
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* ── Marquee band ─────────────────────────────────────────
+   The two strips are one object. Left to themselves they butt straight
+   against the hero above with no gap at all, sit flush on each other, and
+   then hand over to a full section pad that opens a void underneath.
+   Kept outside @layer so the adjacent-sibling rule can outrank the module
+   padding it is correcting. */
+.marquee-band {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.2vw, 1rem);
+  margin-top: clamp(3rem, 9vh, 7rem);
+}
+
+/* The band is itself a separator — a full section pad after it doubles up. */
+.marquee-band + section {
+  padding-top: clamp(3rem, 7vw, 6rem);
+}
+
+/* Hide the native cursor only where we draw our own. */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

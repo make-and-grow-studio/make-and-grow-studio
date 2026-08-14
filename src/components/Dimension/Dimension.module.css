@@ -1,0 +1,205 @@
+.wrap {
+  position: relative;
+  display: block;
+}
+
+/* The annotation layer. Sits outside the content so it never reflows it. */
+.anno {
+  position: absolute;
+  inset: calc(var(--dim-pad, 10px) * -1);
+  pointer-events: none;
+}
+
+/* ── Registration marks ───────────────────────────────────
+   Open L-corners drawn *outside* the bounds, the way crop and register
+   marks are — not filled resize handles sitting on the boundary. They
+   mark the extent of the object; they don't offer to drag it. */
+.mark {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 0 solid var(--anno-line);
+  opacity: 0;
+  transition:
+    opacity 0.3s var(--ease-out-expo),
+    transform 0.5s var(--ease-out-expo);
+}
+.tl {
+  top: -4px;
+  left: -4px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  transform: translate(4px, 4px);
+}
+.tr {
+  top: -4px;
+  right: -4px;
+  border-top-width: 1px;
+  border-right-width: 1px;
+  transform: translate(-4px, 4px);
+}
+.bl {
+  bottom: -4px;
+  left: -4px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  transform: translate(4px, -4px);
+}
+.br {
+  bottom: -4px;
+  right: -4px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+  transform: translate(-4px, -4px);
+}
+
+/* ── The dimension ────────────────────────────────────────
+   A row hung below the object: extension line, rule, figure, rule,
+   extension line. The rules draw outward from the figure, which is how a
+   dimension actually gets laid down — you site the measurement, then run
+   the line out to the witness marks. */
+.dim {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Extension lines rise from the rule back toward the object's edge. */
+.ext {
+  position: absolute;
+  bottom: 50%;
+  width: 1px;
+  height: 17px;
+  background: var(--anno-line);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.45s var(--ease-out-expo);
+}
+.extL {
+  left: 0;
+}
+.extR {
+  right: 0;
+}
+
+.rule {
+  flex: 1;
+  height: 1px;
+  background: var(--anno-line);
+  transform: scaleX(0);
+  transition: transform 0.55s var(--ease-out-expo);
+}
+.ruleL {
+  transform-origin: right;
+}
+.ruleR {
+  transform-origin: left;
+}
+
+.figure {
+  flex: none;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  color: var(--anno);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(3px);
+  transition:
+    opacity 0.3s var(--ease-out-expo),
+    transform 0.4s var(--ease-out-expo);
+}
+
+/* The unit is implied on a drawing, so it's set faint rather than spelled
+   out — it reads as a dimension without a "px" cluttering the figure. */
+.figure::after {
+  content: 'px';
+  margin-left: 0.15em;
+  opacity: 0.45;
+  font-size: 0.85em;
+}
+
+.figureLabel {
+  margin-left: 0.75em;
+  font-style: normal;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ── Shown ────────────────────────────────────────────────
+   Figure first, then the rules run out, then the witness marks tick in —
+   so it reads as one gesture being drawn rather than a box appearing. */
+.wrap[data-shown='true'] .figure,
+.wrap[data-dim-hover]:hover .figure,
+.wrap[data-dim-hover]:focus-within .figure {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.wrap[data-shown='true'] .rule,
+.wrap[data-dim-hover]:hover .rule,
+.wrap[data-dim-hover]:focus-within .rule {
+  transform: scaleX(1);
+  transition-delay: 0.08s;
+}
+
+.wrap[data-shown='true'] .ext,
+.wrap[data-dim-hover]:hover .ext,
+.wrap[data-dim-hover]:focus-within .ext {
+  transform: scaleY(1);
+  transition-delay: 0.42s;
+}
+
+.wrap[data-shown='true'] .mark,
+.wrap[data-dim-hover]:hover .mark,
+.wrap[data-dim-hover]:focus-within .mark {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+/* Struck in pairs, on a diagonal — the order a draughtsman would go in. */
+.wrap[data-shown='true'] .tl {
+  transition-delay: 0.5s;
+}
+.wrap[data-shown='true'] .br {
+  transition-delay: 0.54s;
+}
+.wrap[data-shown='true'] .tr {
+  transition-delay: 0.6s;
+}
+.wrap[data-shown='true'] .bl {
+  transition-delay: 0.64s;
+}
+
+/* ── Click affordance ─────────────────────────────────────
+   A hairline rule under the object hints that it can be measured. It's a
+   rule, not a dashed outline — an outline would read as a selection box. */
+.wrap[data-dim-click] {
+  cursor: pointer;
+}
+.wrap[data-dim-click]::after {
+  content: '';
+  position: absolute;
+  top: calc(100% + var(--dim-pad, 10px) + 13px);
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line-2);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out-expo);
+  pointer-events: none;
+}
+.wrap[data-dim-click]:hover::after,
+.wrap[data-dim-click]:focus-visible::after {
+  opacity: 1;
+}
+/* Once dimensioned, the real rule takes over from the hint. */
+.wrap[data-dim-click][data-shown='true']::after {
+  opacity: 0;
+}

@@ -1,0 +1,62 @@
+.root {
+  position: relative;
+}
+
+/* ── Pinned mode (desktop) ──────────────────────────────── */
+.viewport {
+  position: relative;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  align-items: stretch;
+  width: max-content;
+  will-change: transform;
+}
+
+.root[data-pan='true'] .viewport {
+  height: 100svh;
+  display: flex;
+  align-items: center;
+}
+
+.root[data-pan='true'] .track {
+  gap: clamp(1.25rem, 2.5vw, 2.5rem);
+  padding-inline: var(--gutter);
+}
+
+/* ── Stacked mode (touch / narrow / reduced motion) ─────── */
+.root[data-pan='false'] .viewport {
+  overflow: visible;
+}
+
+.root[data-pan='false'] .track {
+  flex-direction: column;
+  width: 100%;
+  gap: clamp(1rem, 3vw, 1.75rem);
+  padding-inline: var(--gutter);
+}
+
+/* ── Progress rail ──────────────────────────────────────── */
+.progress {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(1.5rem, 4vh, 2.75rem);
+  height: 1px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.root[data-pan='false'] .progress {
+  display: none;
+}
+
+.progressFill {
+  position: absolute;
+  inset: 0;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left;
+}

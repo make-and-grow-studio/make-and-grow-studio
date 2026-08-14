@@ -1,0 +1,132 @@
+.root {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* min-height already supplies the room; section-y on top of it pushed
+     the detail rail off the fold. */
+  padding: calc(var(--chrome-h) + clamp(2rem, 5vh, 4rem)) var(--gutter)
+    clamp(2.5rem, 6vh, 4.5rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Bookends the hero — the page opens and closes on the same light. */
+.bloom {
+  position: absolute;
+  z-index: -1;
+  right: -25%;
+  top: -20%;
+  width: 90vw;
+  height: 90vw;
+  max-width: 1000px;
+  max-height: 1000px;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(var(--brand-rgb), 0.18),
+    rgba(var(--brand-rgb), 0.04) 45%,
+    transparent 68%
+  );
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding-bottom: clamp(1.6rem, 4vw, 2.6rem);
+  color: var(--ink-soft);
+}
+.headTag {
+  color: var(--brand);
+}
+
+/* A shade under the hero — it closes the page rather than competing with
+   the opening, and at this size the copy breaks on its own two phrases. */
+.title {
+  font-size: clamp(2.6rem, 8.5vw, 8rem);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  margin-left: -0.05em;
+  max-width: 20ch;
+  text-wrap: initial;
+}
+@media (min-width: 900px) {
+  .title {
+    line-height: 0.86;
+  }
+}
+
+.accent {
+  color: var(--brand);
+}
+
+.sub {
+  max-width: 52ch;
+  margin-top: clamp(1.4rem, 3vw, 2.2rem);
+  color: var(--ink-soft);
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.2rem);
+  line-height: 1.55;
+}
+.sub strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.6rem, 1.5vw, 1rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+/* ── Detail rail ────────────────────────────────────────── */
+/* Auto-fitting rather than a fixed 2/4 split: the list is a set of contact
+   routes that will gain and lose entries over time, and a hardcoded column
+   count strands an orphan on the last row every time the count changes. */
+.details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+  gap: clamp(1.1rem, 3vw, 1.6rem) 1rem;
+  margin-top: clamp(2rem, 5vw, 4rem);
+  border-top: 1px solid var(--line);
+  padding-top: clamp(1.2rem, 2.5vw, 1.8rem);
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+/* dd carries a 40px inline start margin by default. */
+.detail dd {
+  margin: 0;
+  min-width: 0;
+}
+
+.detailKey {
+  color: var(--brand);
+}
+
+/* Block, not inline: overflow and wrapping don't apply to a non-replaced
+   inline element, so the email ran straight over the next column. Values
+   wrap rather than truncate — a clipped address helps nobody. */
+.detailVal {
+  display: block;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+  transition: color 0.4s var(--ease-out-expo);
+}
+a.detailVal:hover,
+a.detailVal:focus-visible {
+  color: var(--ink);
+}

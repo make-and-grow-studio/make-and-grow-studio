@@ -1,0 +1,116 @@
+:root {
+  /* ── The board ────────────────────────────────────────────
+     The page is a shop drawing on a bench: a buff drafting ground, with
+     cleaner sheets floating on it and iron panels cut into it. Everything
+     downstream still assumes light, so component colour logic is unchanged
+     from the previous system — only the stock it's printed on. */
+  --bg: #dcd8cd; /* the board */
+  --frame: #f3f0e9; /* the sheet */
+  --soft: #e6e2d7; /* inset fills inside a sheet */
+
+  /* ── Graphite ────────────────────────────────────────── */
+  --ink: #191b1c;
+  --ink-soft: #565853;
+  --ink-faint: #9b988e;
+  --ink-rgb: 25, 27, 28;
+
+  /* ── Brand ───────────────────────────────────────────────
+     Same hex as before, different job. Against iron and buff paper it
+     reads as heat and hazard-marking — it earns the place it holds. */
+  --brand: #e4551c;
+  --brand-deep: #b8400e;
+  --brand-rgb: 228, 85, 28;
+
+  /* ── Annotation ──────────────────────────────────────────
+     What used to be a second brand accent is now the drawing's own hand:
+     leader lines, dimension figures, callouts. Deliberately close to
+     --ink-soft, because on a real drawing the annotation is in the same
+     graphite as the object — that's what makes it a drawing and not a UI.
+     Orange stays reserved for live and active state. */
+  --anno: #3d4f57;
+  --anno-rgb: 61, 79, 87;
+  --anno-soft: rgba(61, 79, 87, 0.1);
+  --anno-line: rgba(61, 79, 87, 0.45);
+
+  /* ── Iron ────────────────────────────────────────────────
+     Every dark surface: footer, inverted cards, the title strip, the
+     preloader. One colour, so they read as the same material. */
+  --iron: #1c1f21;
+  --iron-lift: #282c2e;
+
+  /* ── Patina ──────────────────────────────────────────────
+     The living half of the name. Oxidised copper is still a metal, but
+     the one that changes over time — which is the argument for Grow. */
+  --grow: #2e7a62;
+  --grow-lift: #4fa387;
+
+  /* ── Line weights ────────────────────────────────────────
+     A drawing's hierarchy is carried entirely by line weight, so it's a
+     scale here rather than one --line and a lot of one-off rgba(). */
+  --line: rgba(25, 27, 28, 0.13); /* construction, grid, hairline rules */
+  --line-2: rgba(25, 27, 28, 0.24); /* extension and dimension lines */
+  --line-3: rgba(25, 27, 28, 0.55); /* visible edge — the object outline */
+
+  /* Board texture. Kept faint enough to survive behind body copy. */
+  --grid: rgba(25, 27, 28, 0.055);
+  --grid-major: rgba(25, 27, 28, 0.1);
+  --hatch: rgba(25, 27, 28, 0.07);
+
+  --sh: 0 18px 44px -30px rgba(25, 27, 28, 0.42);
+  --sh-lift: 0 28px 64px -36px rgba(25, 27, 28, 0.5);
+
+  /* ── Type ────────────────────────────────────────────── */
+  --display: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --body: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  /* The redline hand. Engineers mark up drawings by pen — this is that. */
+  --hand: 'Caveat', ui-rounded, cursive;
+
+  /* Sized so the hero copy breaks on its own phrases rather than orphaning
+     a word: 12.8vw keeps "impossible to" intact on a phone. */
+  --fs-hero: clamp(2.8rem, 12.8vw, 6rem);
+  --fs-section: clamp(2.4rem, 7vw, 6.5rem);
+  --fs-sub: clamp(1.6rem, 4.5vw, 3rem);
+  --fs-body: clamp(1rem, 1.05rem + 0.2vw, 1.25rem);
+  --fs-label: clamp(0.625rem, 0.6rem + 0.12vw, 0.75rem);
+
+  --tracking-label: 0.1em;
+
+  /* ── Rhythm ──────────────────────────────────────────── */
+  --gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --section-y: clamp(6rem, 14vw, 14rem);
+  --nav-h: 68px;
+  /* The title-block strip that sits above the nav. */
+  --rail-h: 26px;
+  --chrome-h: calc(var(--rail-h) + var(--nav-h));
+  /* Sheets are cut square. A drawing has no 18px pill corners. */
+  --radius: 5px;
+
+  /* ── Motion ──────────────────────────────────────────── */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Layers */
+  --z-grain: 90;
+  --z-nav: 100;
+  --z-rail: 110;
+  /* The cursor stays above the curtain — it's the one thing that should
+     still respond while the page is loading. */
+  --z-preloader: 150;
+  --z-cursor: 200;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-h: 80px;
+  }
+}
+
+/* From here up, "We make brands" fits on one line — the composition the
+   hero is designed around. */
+@media (min-width: 900px) {
+  :root {
+    --fs-hero: clamp(6rem, 11vw, 12.5rem);
+  }
+}

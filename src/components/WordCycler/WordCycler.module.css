@@ -1,0 +1,32 @@
+.root {
+  position: relative;
+  display: inline-grid;
+  vertical-align: baseline;
+  /* Mask: words slide through a fixed slot. The padding buys room for
+     ascenders and descenders that the tight display line-height clips. */
+  overflow: hidden;
+  padding: 0.14em 0 0.2em;
+  margin: -0.14em 0 -0.2em;
+}
+
+/* max-content + justify-self keeps each slot the width of its own word —
+   a stretched grid cell would measure the widest word instead. */
+.slot {
+  grid-area: 1 / 1;
+  justify-self: start;
+  width: max-content;
+  display: block;
+  white-space: nowrap;
+  color: var(--brand);
+  will-change: transform;
+}
+
+/* Sizer holds the box open before JS measures, and for no-JS. */
+.sizer {
+  grid-area: 1 / 1;
+  justify-self: start;
+  width: max-content;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+}

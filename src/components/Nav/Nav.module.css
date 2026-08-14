@@ -1,0 +1,291 @@
+.root {
+  position: fixed;
+  /* Sits under the ruler strip, not over it. */
+  top: var(--rail-h);
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-inline: var(--gutter);
+  /* No bar of its own — the pills float on the canvas. */
+  transition: transform 0.6s var(--ease-out-expo);
+  pointer-events: none;
+}
+.root > * {
+  pointer-events: auto;
+}
+
+/* Hide on scroll-down, bring back on scroll-up. */
+.root[data-hidden='true'] {
+  transform: translateY(calc(-100% - var(--rail-h)));
+}
+.root[data-menu='true'] {
+  transform: none;
+}
+
+/* Shared pill surface. */
+.pillbox {
+  display: inline-flex;
+  align-items: center;
+  background: var(--frame);
+  border-radius: 3px;
+  box-shadow: var(--sh);
+  transition: box-shadow 0.5s var(--ease-out-expo);
+}
+.root[data-scrolled='true'] .pillbox {
+  box-shadow: var(--sh-lift);
+}
+
+/* ── Desktop links ──────────────────────────────────────── */
+.links {
+  display: none;
+  align-items: center;
+  gap: clamp(0.5rem, 1.4vw, 1.1rem);
+  padding: 0.4rem 0.5rem;
+}
+@media (min-width: 900px) {
+  .links {
+    display: flex;
+  }
+}
+
+.link {
+  position: relative;
+  padding: 0.62em 1em;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transition: color 0.4s var(--ease-out-expo);
+  overflow: hidden;
+}
+.link:hover,
+.link:focus-visible {
+  color: var(--ink);
+  background: var(--soft);
+}
+
+/* ── Right cluster ──────────────────────────────────────── */
+.right {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.6rem, 1.5vw, 1.25rem);
+}
+
+.pill {
+  display: none;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.72em 1.05em;
+  background: var(--frame);
+  border-radius: 3px;
+  box-shadow: var(--sh);
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 900px) {
+  .pill {
+    display: inline-flex;
+  }
+}
+
+/* Email address, right cluster. */
+.mail {
+  display: none;
+  align-items: center;
+  padding: 0.72em 1.05em;
+  background: var(--frame);
+  border-radius: 3px;
+  box-shadow: var(--sh);
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  transition: color 0.4s var(--ease-out-expo);
+}
+.mail:hover {
+  color: var(--brand);
+}
+@media (min-width: 1180px) {
+  .mail {
+    display: inline-flex;
+  }
+}
+
+.dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--brand);
+}
+.dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--brand);
+  animation: pulse 2.4s var(--ease-out-quart) infinite;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70%,
+  100% {
+    transform: scale(3.6);
+    opacity: 0;
+  }
+}
+
+.clock {
+  color: var(--ink);
+}
+.divider {
+  color: var(--line);
+}
+
+.cta {
+  display: none;
+}
+@media (min-width: 900px) {
+  .cta {
+    display: inline-flex;
+  }
+}
+
+/* ── Burger ─────────────────────────────────────────────── */
+.burger {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  gap: 6px;
+  width: 46px;
+  height: 46px;
+  background: var(--frame);
+  box-shadow: var(--sh);
+  border-radius: 3px;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (min-width: 900px) {
+  .burger {
+    display: none;
+  }
+}
+
+.bar {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform 0.5s var(--ease-out-expo), opacity 0.3s linear;
+}
+.burger[aria-expanded='true'] .bar:first-child {
+  transform: translateY(3.75px) rotate(45deg);
+}
+.burger[aria-expanded='true'] .bar:last-child {
+  transform: translateY(-3.75px) rotate(-45deg);
+}
+
+/* ── Mobile overlay ─────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-nav) - 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: calc(var(--nav-h) + 2rem) var(--gutter) calc(2rem + env(safe-area-inset-bottom));
+  background: var(--frame);
+  clip-path: inset(0 0 100% 0);
+  visibility: hidden;
+}
+
+.overlaySheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 80% at 100% 0%,
+    rgba(var(--brand-rgb), 0.1),
+    transparent 62%
+  );
+}
+
+.menuList {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  margin: auto 0;
+}
+
+.menuItem {
+  overflow: hidden;
+}
+
+.menuLink {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding: 0.12em 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 13vw, 4.5rem);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  transition: color 0.4s var(--ease-out-expo);
+}
+.menuLink:active {
+  color: var(--brand);
+}
+
+.menuIndex {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--brand);
+  transform: translateY(-0.9em);
+}
+
+.overlayFoot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.overlayPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.overlayMail {
+  font-family: var(--body);
+  font-size: clamp(1.05rem, 4.4vw, 1.35rem);
+  color: var(--ink);
+}

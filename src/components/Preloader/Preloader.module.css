@@ -1,0 +1,162 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+  display: flex;
+  flex-direction: column;
+  padding: calc(1.75rem + env(safe-area-inset-top)) var(--gutter)
+    calc(1.75rem + env(safe-area-inset-bottom));
+  /* The one inverted surface on the site — a dark ground that lifts to
+     reveal the light canvas. Ink tokens are dark, so this block defines
+     its own light-on-dark scale rather than inheriting the page's. */
+  background: var(--iron);
+  --sheet-ink: #f4f8fb;
+  --sheet-ink-soft: rgba(244, 248, 251, 0.62);
+  /* Wipes upward on complete. */
+  clip-path: inset(0 0 0 0);
+  overflow: hidden;
+}
+
+/* Same brass bloom as the hero, so the curtain lifts onto a room the
+   visitor has, in a sense, already been standing in. */
+.bloom {
+  position: absolute;
+  left: -25%;
+  bottom: -40%;
+  width: 90vw;
+  height: 90vw;
+  max-width: 900px;
+  max-height: 900px;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(var(--brand-rgb), 0.16),
+    transparent 66%
+  );
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.top,
+.bottom {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  will-change: transform;
+}
+
+.label {
+  color: var(--sheet-ink-soft);
+}
+
+@media (max-width: 559px) {
+  .labelWide {
+    display: none;
+  }
+}
+
+/* ── The story ──────────────────────────────────────────── */
+.story {
+  position: relative;
+  margin: auto 0;
+  /* Reserve the tallest beat's height so nothing below it jumps. */
+  display: grid;
+  will-change: transform;
+}
+
+.beat {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.7rem, 2vw, 1.4rem);
+  /* Each beat is masked by its own clip so it can rise past its neighbours. */
+  overflow: hidden;
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+}
+
+.beatIndex {
+  flex: none;
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  color: var(--brand);
+  /* Sits against the cap height, not the baseline. Done with alignment
+     rather than a transform — GSAP owns transform on this element. */
+  align-self: flex-start;
+  padding-top: 0.25em;
+  will-change: transform;
+}
+
+.beatText {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 5.2vw, 3.1rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--sheet-ink);
+  text-wrap: initial;
+  will-change: transform;
+}
+
+.beatAccent {
+  color: var(--brand);
+}
+
+/* ── Payoff: the logo lands where the story was ─────────── */
+.logoWrap {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.logo {
+  display: block;
+  width: min(460px, 78vw);
+  height: auto;
+  color: var(--sheet-ink);
+}
+
+/* ── Brass rule that fills with the count ───────────────── */
+.track {
+  position: relative;
+  height: 1px;
+  margin-top: auto;
+  margin-bottom: clamp(1.1rem, 3vh, 1.75rem);
+  background: rgba(244, 248, 251, 0.18);
+  overflow: hidden;
+}
+.fill {
+  position: absolute;
+  inset: 0;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.counter {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 300;
+  font-size: clamp(2.2rem, 9vw, 4rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--sheet-ink);
+}
+.percent {
+  font-size: 0.32em;
+  color: var(--brand);
+  letter-spacing: 0.1em;
+  vertical-align: super;
+  margin-left: 0.25em;
+}
+
+.place {
+  text-align: right;
+  color: var(--sheet-ink-soft);
+  line-height: 1.7;
+}

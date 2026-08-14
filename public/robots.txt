@@ -1,0 +1,7 @@
+# Make & Grow — https://makeandgrow.studio/
+# Everything is public; there is nothing here worth hiding from a crawler.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://makeandgrow.studio/sitemap.xml

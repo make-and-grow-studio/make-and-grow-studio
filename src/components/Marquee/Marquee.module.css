@@ -1,0 +1,85 @@
+.root {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  /* The strip bleeds past the gutter — it should feel wider than the page. */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.set {
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+
+/* ── Big display strip ──────────────────────────────────── */
+.display .item {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 3.5vw, 3rem);
+  padding-right: clamp(1.5rem, 3.5vw, 3rem);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 8vw, 7rem);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+/* Outlined words alternate with solid ones for rhythm. */
+.display .item:nth-child(even) span:first-child {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(var(--ink-rgb), 0.4);
+}
+
+/* A drawn diamond, not a glyph — the ✦ character isn't in our subsets and
+   would silently fall back to a different typeface. */
+.star {
+  flex: none;
+  width: 0.24em;
+  height: 0.24em;
+  background: var(--brand);
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+
+/* Two strips is a band on a phone, not a detail. Keep the display one. */
+@media (max-width: 699px) {
+  .phoneHide {
+    display: none;
+  }
+}
+
+/* ── Thin mono counter-strip ────────────────────────────── */
+.mono {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.mono .item {
+  display: flex;
+  align-items: center;
+  gap: 0.9em;
+  padding: 0.85em 0;
+  padding-right: 0.9em;
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+.mono .star {
+  width: 4px;
+  height: 4px;
+  border-radius: 1px;
+}

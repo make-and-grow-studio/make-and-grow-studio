@@ -1,0 +1,380 @@
+.root {
+  position: relative;
+  padding: var(--section-y) var(--gutter);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding-bottom: clamp(1.2rem, 3vw, 2rem);
+  color: var(--ink-soft);
+}
+.headTag {
+  color: var(--brand);
+}
+.headMeta {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.aside {
+  font-size: clamp(1.15rem, 2.6vw, 1.75rem);
+  transform: rotate(-1.6deg);
+  transform-origin: left center;
+  margin-bottom: clamp(0.6rem, 1.6vw, 1.1rem);
+  width: fit-content;
+}
+
+/* ── The grid ────────────────────────────────────────────────
+   One dashboard rather than a stack of full-width bands. Areas are named
+   so the shape is legible here rather than encoded in span counts. */
+.grid {
+  display: grid;
+  gap: clamp(0.75rem, 1.4vw, 1.1rem);
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'stmt'
+    'metrics'
+    'caps'
+    'frame'
+    'now'
+    'signal';
+}
+
+@media (min-width: 700px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'stmt stmt'
+      'metrics caps'
+      'frame frame'
+      'now signal';
+  }
+}
+
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-areas:
+      'stmt stmt metrics metrics'
+      'stmt stmt caps caps'
+      'frame frame now signal';
+  }
+}
+
+.stmt {
+  grid-area: stmt;
+}
+.metrics {
+  grid-area: metrics;
+}
+.caps {
+  grid-area: caps;
+}
+.frame {
+  grid-area: frame;
+}
+.now {
+  grid-area: now;
+}
+.signal {
+  grid-area: signal;
+}
+
+/* ── Card shell ─────────────────────────────────────────── */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(1.1rem, 2.2vw, 1.9rem);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--frame);
+  box-shadow: var(--sh);
+  overflow: hidden;
+  transition:
+    transform 0.6s var(--ease-out-expo),
+    box-shadow 0.6s var(--ease-out-expo),
+    border-color 0.6s var(--ease-out-expo);
+}
+
+/* A light sweep that only runs on hover — the ambient `am-sheen` loops
+   forever, which would be noise across six cards at once. */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.42),
+    transparent
+  );
+  opacity: 0;
+  transform: translateX(-140%) skewX(-14deg);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--sh-lift);
+    border-color: rgba(var(--brand-rgb), 0.35);
+  }
+  .card:hover::after {
+    opacity: 1;
+    transform: translateX(320%) skewX(-14deg);
+    transition:
+      transform 0.9s var(--ease-out-expo),
+      opacity 0.2s linear;
+  }
+  /* The index tag steps out as the card lifts, so the two read as one
+     gesture rather than a card moving and a label sitting still. */
+  .card:hover .cardLabelTag {
+    transform: translateX(3px);
+  }
+  .card:hover .cardLabel {
+    color: var(--ink);
+  }
+}
+
+
+.dark::after {
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.09),
+    transparent
+  );
+}
+
+/* Inverted cards. Same shell, its own local ink scale. */
+.dark {
+  background: var(--iron);
+  border-color: rgba(244, 248, 251, 0.12);
+  color: #f4f8fb;
+  --ink: #f4f8fb;
+  --ink-soft: rgba(244, 248, 251, 0.62);
+  --line: rgba(244, 248, 251, 0.14);
+}
+
+/* No auto margin here — it would shove every card's content to the
+   bottom and leave a void under the label on the short cards. Cards that
+   want something pinned low use margin-top:auto on that element. */
+.cardLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  color: var(--ink-soft);
+  transition: color 0.4s var(--ease-out-expo);
+}
+.cardLabelTag {
+  color: var(--brand);
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+/* ── Statement ──────────────────────────────────────────── */
+.lead {
+  font-size: clamp(1.7rem, 3.4vw, 3.1rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  margin: clamp(1.2rem, 2.6vw, 2rem) 0 clamp(0.9rem, 1.8vw, 1.3rem);
+  text-wrap: initial;
+}
+.quote {
+  color: var(--brand);
+}
+
+.detail {
+  max-width: 52ch;
+  color: var(--ink-soft);
+  font-size: clamp(0.95rem, 0.92rem + 0.25vw, 1.08rem);
+  line-height: 1.55;
+}
+.detail strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.nos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: clamp(1rem, 2vw, 1.4rem);
+}
+.no {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.45em 0.8em;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transition:
+    color 0.4s var(--ease-out-expo),
+    border-color 0.4s var(--ease-out-expo),
+    transform 0.45s var(--ease-spring);
+}
+.no:hover {
+  color: var(--brand);
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.noX {
+  color: var(--brand);
+}
+
+.stmtFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: auto;
+  padding-top: clamp(1.4rem, 3vw, 2.2rem);
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+.dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  color: #16a34a;
+  flex: none;
+}
+.stmtFootRight {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  color: #16a34a;
+}
+
+/* ── Metrics ────────────────────────────────────────────── */
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.9rem, 2vw, 1.4rem);
+  margin-top: clamp(1rem, 2vw, 1.4rem);
+}
+.metric {
+  min-width: 0;
+}
+.metricValue {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+.metricLabel {
+  display: block;
+  margin-top: 0.5em;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+.inf {
+  width: 1em;
+  height: 0.62em;
+}
+
+/* ── Capabilities chips ─────────────────────────────────── */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 0.4rem;
+  margin-top: clamp(1rem, 2vw, 1.4rem);
+  flex: 1;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.55em 0.9em;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 0.85rem;
+  color: var(--ink);
+  background: var(--frame);
+  transition:
+    transform 0.45s var(--ease-spring),
+    border-color 0.4s var(--ease-out-expo),
+    color 0.4s var(--ease-out-expo);
+}
+.chip:hover {
+  transform: translateY(-3px);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+.chipDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--brand);
+  flex: none;
+}
+
+/* ── now-playing ────────────────────────────────────────── */
+.nowTitle {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-top: clamp(0.9rem, 2vw, 1.2rem);
+  color: var(--ink);
+}
+.nowTools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.9rem;
+}
+.tool {
+  padding: 0.35em 0.7em;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+.eqWrap {
+  margin-top: auto;
+  padding-top: 1rem;
+  color: var(--brand);
+}
+
+/* ── Signal ─────────────────────────────────────────────── */
+.signalClock {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-top: clamp(0.9rem, 2vw, 1.2rem);
+}
+.signalWhere {
+  margin-top: 0.4rem;
+  color: var(--ink-soft);
+}
+.signalNote {
+  margin-top: auto;
+  padding-top: 1rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}

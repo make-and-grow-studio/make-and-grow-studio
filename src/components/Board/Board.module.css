@@ -1,0 +1,127 @@
+.board {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  /* Nothing in here can affect layout or paint outside itself. */
+  contain: strict;
+}
+
+/* ── Drafting grid ────────────────────────────────────────
+   Two scales, the way gridded stock is printed: a fine field with a
+   heavier line every tenth. Both are gradients on one element rather than
+   two stacked divs. */
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:
+    96px 96px,
+    96px 96px,
+    12px 12px,
+    12px 12px;
+  /* Anchored to the top-left corner of the sheet, not the viewport centre,
+     so the major lines stay put as the window resizes. */
+  background-position: 0 0;
+  /* The grid is drawn stock — it shouldn't compete with body copy, so it
+     falls away toward the middle of the screen where the text sits. */
+  mask-image: radial-gradient(
+    ellipse 90% 70% at 50% 45%,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+/* ── Construction figures ─────────────────────────────────
+   Struck in, held, then dissolved. Slow on purpose: the longest cycle is
+   over a minute, so the board is never visibly "animating" — you notice
+   that it changed, not that it moved. */
+.construction {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.figure {
+  stroke: var(--ink);
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  animation-name: strike;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* Draw (0→38%), hold (→72%), dissolve (→88%), rest undrawn.
+   Opacity is what hides the reset, so it must be 0 at both ends. */
+@keyframes strike {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.16;
+  }
+  38% {
+    stroke-dashoffset: 0;
+    opacity: 0.16;
+  }
+  72% {
+    stroke-dashoffset: 0;
+    opacity: 0.16;
+  }
+  88%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+/* ── Section hatch ────────────────────────────────────────
+   The 45° fill that marks a cut face. Only along the bottom, where it
+   reads as the board's edge rather than as texture over the content. */
+.hatch {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: 0;
+  height: 34%;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--hatch) 0 1px,
+    transparent 1px 9px
+  );
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0) 100%);
+  /* Creeps sideways by exactly one hatch period, so the loop is seamless —
+     9px at 45° is 9 * sqrt(2) ≈ 12.728px of horizontal travel. */
+  animation: hatchCreep 90s linear infinite;
+}
+
+@keyframes hatchCreep {
+  to {
+    transform: translateX(12.728px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hatch {
+    animation: none;
+  }
+  /* The global reset pins every animation to a single 0.01ms iteration,
+     which would leave the figures stopped at 0% — undrawn and invisible.
+     Show them struck and static instead. */
+  .figure {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 0.16;
+  }
+}
